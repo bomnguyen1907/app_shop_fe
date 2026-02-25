@@ -22,12 +22,15 @@ const TextFieldStyled = styled(TextField)<TextFieldProps>(({ theme }) => {
             "&:before, &:after": {
                 display: "none"
             },
+            "& .MuiInputBase-inputAdornedEnd": {
+                borderRadius: 8
+            },
             "&:placeholder": {
                 color: "red"
             },
             ".MuiInputBase-input": {
                 padding: "8px 10px",
-                color: 'red'
+                color: 'currentcolor'
             },
             '&.Mui-error': {
                 borderColor: theme.palette.error.main
