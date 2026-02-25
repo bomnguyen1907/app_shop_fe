@@ -9,7 +9,7 @@ import { useState } from 'react'
 
 
 // ** Mui
-import { Box, Button, Checkbox, CssBaseline, FormControlLabel, IconButton, InputAdornment, Typography, useTheme } from '@mui/material'
+import { Box, Button, CssBaseline, IconButton, InputAdornment, Typography, useTheme } from '@mui/material'
 
 // ** Component
 import CustomTextField from 'src/components/text-field'
@@ -24,18 +24,24 @@ import Icon from 'src/components/Icon'
 import { EMAIL_REG, PASSWORD_REG } from 'src/configs/regex'
 
 // ** Images
-import LoginDark from "/public/images/login-dark.png"
-import LoginLight from "/public/images/login-light.png"
+import RegisterDark from "/public/images/register-dark.png"
+import RegisterLight from "/public/images/register-light.png"
 
 type TProps = {
 
+}
+
+type TDefaultValue = {
+    email: string
+    password: string
+    confirmPassword: string
 }
 
 const LoginPage: NextPage<TProps> = () => {
 
     // State
     const [showPassword, setShowPassword] = useState(false)
-    const [isRemember, setIsRemember] = useState(true)
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
     // ** theme
     const theme = useTheme()
@@ -43,13 +49,17 @@ const LoginPage: NextPage<TProps> = () => {
     const schema = yup.object().shape({
         email: yup.string().required("The field is required").matches(EMAIL_REG, "The field is must email type"),
         password: yup.string().required("The field is required").matches(PASSWORD_REG, "The password is contain character, special, character, number"),
+        confirmPassword: yup.string().required("The field is required").matches(PASSWORD_REG, "The password is contain character, special, character, number").oneOf([yup.ref("password"), ''], 'The confirm is must match with password')
     })
 
+    const defaultValues: TDefaultValue = {
+        email: '',
+        password: '',
+        confirmPassword: ''
+    }
+
     const { handleSubmit, control, formState: { errors } } = useForm({
-        defaultValues: {
-            email: "",
-            password: "",
-        },
+        defaultValues,
         mode: "onBlur",
         resolver: yupResolver(schema)
     })
@@ -77,7 +87,7 @@ const LoginPage: NextPage<TProps> = () => {
                     alignItems: "center", justifyContent: "center", borderRadius: "20px", backgroundColor: theme.palette.customColors.bodyBg,
                     height: "100%", minWidth: "50vw",
                 }}>
-                <Image src={theme.palette.mode === "light" ? LoginLight : LoginDark} alt="login Image" style={{
+                <Image src={theme.palette.mode === "light" ? RegisterLight : RegisterDark} alt="login Image" style={{
                     height: "auto",
                     width: "auto"
                 }} />
@@ -93,7 +103,7 @@ const LoginPage: NextPage<TProps> = () => {
                     }}
                 >
                     <Typography component={'h1'} variant='h5'>
-                        Sign in
+                        Register
                     </Typography>
                     <form onSubmit={handleSubmit(onSubmit)} autoComplete='off' noValidate >
                         <Box sx={{ mt: 2, width: "300px" }}>
@@ -137,7 +147,7 @@ const LoginPage: NextPage<TProps> = () => {
                                         value={value}
                                         placeholder='Input password'
                                         error={Boolean(errors?.password)}
-                                        helperText={errors?.email?.message}
+                                        helperText={errors?.password?.message}
                                         type={showPassword ? "text" : 'password'}
                                         InputProps={{
                                             endAdornment: (
@@ -154,31 +164,50 @@ const LoginPage: NextPage<TProps> = () => {
                             />
                         </Box>
 
-                        <Box sx={{ mt: 2, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        name='rememberMe'
-                                        checked={isRemember}
-                                        onChange={e => setIsRemember(e.target.checked)}
-                                        color='primary'
+                        <Box sx={{ mt: 2, width: "300px" }}>
+                            <Controller
+                                control={control}
+                                rules={{
+                                    required: true,
+                                }}
+                                render={({ field: { onChange, onBlur, value } }) => (
+                                    <CustomTextField
+                                        margin='normal'
+                                        required
+                                        fullWidth
+                                        label='Confirm password'
+                                        onChange={onChange}
+                                        onBlur={onBlur}
+                                        value={value}
+                                        placeholder='Enter confirm password'
+                                        error={Boolean(errors?.confirmPassword)}
+                                        helperText={errors?.confirmPassword?.message}
+                                        type={showConfirmPassword ? "text" : 'password'}
+                                        InputProps={{
+                                            endAdornment: (
+                                                <InputAdornment position='end'>
+                                                    <IconButton edge="end" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                                                        {showConfirmPassword ? <Icon icon="material-symbols:visibility-outline" /> : <Icon icon="mdi:visibility-off-outline" />}
+                                                    </IconButton>
+                                                </InputAdornment>
+                                            )
+                                        }}
                                     />
-                                }
-                                label='Remember me'
+                                )}
+                                name="confirmPassword"
                             />
-                            <Typography variant='body2'>
-                                Forgot password?
-                            </Typography>
                         </Box>
+
+
                         <Button type='submit' fullWidth variant='contained' sx={{ mt: 3, mb: 2 }}>
-                            Sign In
+                            Register
                         </Button>
                         <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "4px" }}>
                             <Typography>
-                                {"Don't have an account?"}
+                                {"Do you have already account?"}
                             </Typography>
-                            <Link style={{color: theme.palette.mode === "light" ? theme.palette.common.black: theme.palette.common.white}} href='/register'>
-                                {"Register"}
+                            <Link style={{ color: theme.palette.mode === "light" ? theme.palette.common.black : theme.palette.common.white }} href='/login'>
+                                {"Login"}
                             </Link>
                         </Box>
                         <Typography sx={{ textAlign: "center", mt: 2, mb: 2 }}>Or</Typography>
