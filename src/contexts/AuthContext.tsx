@@ -12,6 +12,8 @@ import authConfig from 'src/configs/auth'
 
 // ** Types
 import { AuthValuesType, LoginParams, ErrCallbackType, UserDataType } from './types'
+
+// ** services
 import { loginAuth } from 'src/services/auth'
 
 // ** Defaults

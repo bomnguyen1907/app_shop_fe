@@ -1,4 +1,7 @@
+// ** React
 import * as React from 'react';
+
+// ** Next
 import { NextPage } from 'next'
 
 // ** Mui
@@ -9,9 +12,8 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import Badge from '@mui/material/Badge';
 
-// ** layout
-
-
+// component
+import IconifyIcon from 'src/components/Icon';
 
 const drawerWidth: number = 240;
 
@@ -61,7 +63,7 @@ const Horizontal: NextPage<TProps> = ({ open, toggleDrawer }) => {
                         ...(open && { display: 'none' }),
                     }}
                 >
-                    {/* <MenuIcon /> */}
+                    <IconifyIcon icon="ic:round-menu" />
                 </IconButton>
                 <Typography
                     component="h1"
@@ -74,7 +76,7 @@ const Horizontal: NextPage<TProps> = ({ open, toggleDrawer }) => {
                 </Typography>
                 <IconButton color="inherit">
                     <Badge badgeContent={4} color="secondary">
-                        {/* <NotificationsIcon /> */}
+                        <IconifyIcon icon="iconamoon:notification" />
                     </Badge>
                 </IconButton>
             </Toolbar>
